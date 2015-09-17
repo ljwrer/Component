@@ -1,0 +1,18 @@
+.m-window-bounding-box{
+	position: fixed;
+	height: 300px;
+	width: 500px;
+	border: 1px solid #000;
+	top: 100px;
+	left: 50%;
+	margin-left: -250px;
+	box-shadow:  0 0 12px rgba(0,0,0,0.5);
+}
+.m-window-bounding-box .close{
+	position: absolute;
+	left: 50%;
+	bottom: 50px;
+	height: 30px;
+	width: 100px;
+	margin-left: -50px;
+}
