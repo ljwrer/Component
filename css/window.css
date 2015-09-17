@@ -4,8 +4,8 @@
 	width: 500px;
 	border: 1px solid #000;
 	top: 100px;
-	left: 50%;
-	margin-left: -250px;
+	/*left: 50%;*/
+	/*margin-left: -250px;*/
 	box-shadow:  0 0 12px rgba(0,0,0,0.5);
 }
 .m-window-bounding-box .close{

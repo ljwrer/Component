@@ -18,6 +18,7 @@ define(['jquery'],function(){
 				$boundingBox.remove()
 			})
 			$.extend(this.cfg,cfg);
+			console.log(this.cfg);
 			$boundingBox.css({
 				width:this.cfg.width,
 				height:this.cfg.height,
