@@ -8,6 +8,6 @@ require(['jquery','Window'],function(jquery,w){
 	$("#a").click(function(){
 		new w.Window().alert("hello",function(){
 			alert("removed")
-		});
+		},{width:500,height:500,top:100});
 	})
 })
