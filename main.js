@@ -1,13 +1,26 @@
 require.config({
-	paths:{
-		Window:"modules/simplePopup/window",
-		jquery:"vendor/jquery/jquery-2.1.1"
+	paths: {
+		Window: "modules/simplePopup/window",
+		jquery: "vendor/jquery/jquery-2.1.1",
+		jqueryUI:"vendor/jquery/jquery-ui"
 	}
 });
-require(['jquery','Window'],function(jquery,w){
-	$("#a").click(function(){
-		new w.Window().alert("hello",function(){
-			alert("removed")
-		},{width:500,height:500,top:100});
+require(['jquery', 'Window'], function(jquery, w) {
+	$("#a").click(function() {
+		var win = new w.Window();
+		win.alert({
+			width: 500,
+			height: 500,
+			content: "hello",
+			hasCloseBtn: true,
+			handle4CloseBtn: function() {
+				alert("click close button")
+			},
+			handle4AlertBtn: function() {
+				alert("click alert button")
+			},
+			skinClassName:"m-window-bounding-box-skina",
+			text4AlertBtn:"OK!"
+		});
 	})
 })
