@@ -2,7 +2,9 @@ require.config({
 	paths: {
 		Window: "modules/simplePopup/window",
 		jquery: "vendor/jquery/jquery-2.1.1",
-		jqueryUI:"vendor/jquery/jquery-ui"
+		jqueryUI:"vendor/jquery/jquery-ui",
+		Widget:"modules/widget/widget",
+		util:"vendor/util/util"
 	}
 });
 require(['jquery', 'Window'], function(jquery, w) {
@@ -22,15 +24,12 @@ require(['jquery', 'Window'], function(jquery, w) {
 			skinClassName:"m-window-bounding-box-skina",
 			text4AlertBtn:"OK!",
 			dragHandle:".header"
-		});
-		win.on("alert",function(){
+		}).on("alert",function(){
 			alert("click 2nd alert button");
-		})
-		win.on("alert",function(){
+		}).on("alert",function(){
 			alert("click 3rd alert button");
-		})
-		win.on("close",function(){
+		}).on("close",function(){
 			alert("click 2nd close button");
-		})
+		});
 	})
 })

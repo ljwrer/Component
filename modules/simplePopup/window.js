@@ -1,5 +1,6 @@
-define(['jquery','jqueryUI'], function() {
+define(['jquery', 'jqueryUI', 'Widget', 'util'], function($, $UI, widget, util) {
 	function Window() {
+		widget.Widget.call(this);
 		this.cfg = {
 			title: "系统消息",
 			width: 500,
@@ -12,45 +13,65 @@ define(['jquery','jqueryUI'], function() {
 			skinClassName: null,
 			text4AlertBtn: "确定",
 			hasMask: true,
-			isDragable:true,
-			dragHandle:null
+			isDragable: true,
+			dragHandle: null
 		};
-		this.handlers={};
 	}
+	util.inheritPrototype(Window, widget.Widget);
+	Window.prototype.rendUI = function() {
+		var that = this;
+		var CFG = $.extend(this.cfg, cfg);
+		this.$boundingBox = $('<div class="m-window-bounding-box">' +
+			'<div class="header">' + CFG.title + '</div>' +
+			'<div class="content">' + CFG.content + '</div>' +
+			'<div class="footer">' +
+			'<button class="close">' + CFG.text4AlertBtn + '</button>' +
+			'</div>' +
+			'</div>');
+
+	}
+	Window.prototype.bindUI = function() {
+		var that = this;
+		var CFG = $.extend(this.cfg, cfg);
+		$confirmButton = $boundingBox.find(".footer button");
+		$confirmButton.click(function() {
+			$boundingBox.remove();
+			$mask && $mask.remove();
+			that.fire("alert");
+		});
+
+	}
+	Window.prototype.syncUI = function() {
+
+	}
+	Window.prototype.destructor = function() {
+
+	}
+	Window.prototype.alert = function() {
+
+	}
+
+
+
 	Window.prototype = {
-		constructor: Window,
-		on:function(type,handler){
-			if(this.handlers[type]==undefined){
-				this.handlers[type]=[];
-			}
-			this.handlers[type].push(handler);
-		},
-		fire:function(type,data){
-			if(this.handlers[type] instanceof Array){
-				var handlers=this.handlers[type];
-				for(var i=0,len=handlers.length;i<len;i++){
-					handlers[i](data);
-				}
-			}
-		},
+
 		alert: function(cfg) {
-			var that=this;
-			var CFG = $.extend(this.cfg, cfg);
-			var $boundingBox = $('<div class="m-window-bounding-box">' +
-				'<div class="header">' + CFG.title + '</div>' +
-				'<div class="content">' + CFG.content + '</div>' +
-				'<div class="footer">' +
-				'<button class="close">' + CFG.text4AlertBtn + '</button>' +
-				'</div>' +
-				'</div>');
-			$boundingBox.appendTo("body");
-			$confirmButton = $boundingBox.find(".footer button");
-			$confirmButton.click(function() {
-//				CFG.handle4AlertBtn && CFG.handle4AlertBtn();
-				$boundingBox.remove();
-				$mask && $mask.remove();
-				that.fire("alert");
-			});
+			var that = this;
+			//			var CFG = $.extend(this.cfg, cfg);
+			//			var $boundingBox = $('<div class="m-window-bounding-box">' +
+			//				'<div class="header">' + CFG.title + '</div>' +
+			//				'<div class="content">' + CFG.content + '</div>' +
+			//				'<div class="footer">' +
+			//				'<button class="close">' + CFG.text4AlertBtn + '</button>' +
+			//				'</div>' +
+			//				'</div>');
+			//			$boundingBox.appendTo("body");
+//			$confirmButton = $boundingBox.find(".footer button");
+//			$confirmButton.click(function() {
+//				$boundingBox.remove();
+//				$mask && $mask.remove();
+//				that.fire("alert");
+//			});
 			$boundingBox.css({
 				width: CFG.width,
 				height: CFG.height,
@@ -66,29 +87,32 @@ define(['jquery','jqueryUI'], function() {
 				var $closeBtn = $('<span class="close-btn"></span>');
 				$closeBtn.appendTo($boundingBox);
 				$closeBtn.click(function() {
-//					CFG.handle4CloseBtn && CFG.handle4CloseBtn();
 					$boundingBox.remove();
 					$mask && $mask.remove();
 					that.fire("close")
 				})
 			}
-			if(CFG.handle4AlertBtn){
-				that.on("alert",CFG.handle4AlertBtn);
+			if (CFG.handle4AlertBtn) {
+				that.on("alert", CFG.handle4AlertBtn);
 			}
-			if(CFG.handle4CloseBtn){
-				that.on("close",CFG.handle4CloseBtn);
+			if (CFG.handle4CloseBtn) {
+				that.on("close", CFG.handle4CloseBtn);
 			}
 			if (CFG.skinClassName) {
 				$boundingBox.removeClass("m-window-bounding-box")
 				$boundingBox.addClass(CFG.skinClassName);
 			}
-			if(CFG.isDragable){
-				if(CFG.dragHandle){
-					$boundingBox.draggable({handle:CFG.dragHandle});
-				}else{
+			if (CFG.isDragable) {
+				if (CFG.dragHandle) {
+					var dragHandle = $boundingBox.find(CFG.dragHandle)
+					$boundingBox.draggable({
+						handle: dragHandle
+					});
+				} else {
 					$boundingBox.draggable();
 				}
 			}
+			return this;
 		},
 		confirm: function() {},
 		prompt: function() {}
