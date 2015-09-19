@@ -1,4 +1,4 @@
-define(['jquery','jqueryUI'], function($,$UI) {
+define(['jquery','jqueryUI'], function() {
 	function Window() {
 		this.cfg = {
 			title: "系统消息",
@@ -15,10 +15,26 @@ define(['jquery','jqueryUI'], function($,$UI) {
 			isDragable:true,
 			dragHandle:null
 		};
+		this.handlers={};
 	}
 	Window.prototype = {
 		constructor: Window,
+		on:function(type,handler){
+			if(this.handlers[type]==undefined){
+				this.handlers[type]=[];
+			}
+			this.handlers[type].push(handler);
+		},
+		fire:function(type,data){
+			if(this.handlers[type] instanceof Array){
+				var handlers=this.handlers[type];
+				for(var i=0,len=handlers.length;i<len;i++){
+					handlers[i](data);
+				}
+			}
+		},
 		alert: function(cfg) {
+			var that=this;
 			var CFG = $.extend(this.cfg, cfg);
 			var $boundingBox = $('<div class="m-window-bounding-box">' +
 				'<div class="header">' + CFG.title + '</div>' +
@@ -30,9 +46,10 @@ define(['jquery','jqueryUI'], function($,$UI) {
 			$boundingBox.appendTo("body");
 			$confirmButton = $boundingBox.find(".footer button");
 			$confirmButton.click(function() {
-				CFG.handle4AlertBtn && CFG.handle4AlertBtn();
+//				CFG.handle4AlertBtn && CFG.handle4AlertBtn();
 				$boundingBox.remove();
 				$mask && $mask.remove();
+				that.fire("alert");
 			});
 			$boundingBox.css({
 				width: CFG.width,
@@ -49,10 +66,17 @@ define(['jquery','jqueryUI'], function($,$UI) {
 				var $closeBtn = $('<span class="close-btn"></span>');
 				$closeBtn.appendTo($boundingBox);
 				$closeBtn.click(function() {
-					CFG.handle4CloseBtn && CFG.handle4CloseBtn();
+//					CFG.handle4CloseBtn && CFG.handle4CloseBtn();
 					$boundingBox.remove();
 					$mask && $mask.remove();
+					that.fire("close")
 				})
+			}
+			if(CFG.handle4AlertBtn){
+				that.on("alert",CFG.handle4AlertBtn);
+			}
+			if(CFG.handle4CloseBtn){
+				that.on("close",CFG.handle4CloseBtn);
 			}
 			if (CFG.skinClassName) {
 				$boundingBox.removeClass("m-window-bounding-box")
@@ -62,7 +86,7 @@ define(['jquery','jqueryUI'], function($,$UI) {
 				if(CFG.dragHandle){
 					$boundingBox.draggable({handle:CFG.dragHandle});
 				}else{
-					$boundingBox.dragable();
+					$boundingBox.draggable();
 				}
 			}
 		},
