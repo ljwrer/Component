@@ -9,7 +9,7 @@ define(['jquery'], function() {
 			if (this.handlers[type] == undefined) {
 				this.handlers[type] = [];
 			}
-			this.handers[type].push(handler);
+			this.handlers[type].push(handler);
 			return this;
 		},
 		fire: function(type, data) {
@@ -27,14 +27,15 @@ define(['jquery'], function() {
 		destructor:function() {},
 		render:function(container){
 			this.renderUI();
+			this.handlers={};
 			this.bindUI();
 			this.syncUI();
-			$(container||document.body).append(this.boundingBox);
+			$(container||document.body).append(this.$boundingBox);
 		},
 		destroy:function(){
 			this.destructor();
-			this.boundingBox.off();
-			this.boundingBox.remove();
+			this.$boundingBox.off();
+			this.$boundingBox.remove();
 		}
 	}
 	return {

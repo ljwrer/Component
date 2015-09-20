@@ -8,36 +8,39 @@
 	</head>
 
 	<body>
-		<script>
-			function Type1(a1, a2) {
-				this.a1 = a1;
-				this.a2 = a2;
-			};
-			Type1.prototype = {
-				constructor: Type1,
-				f1: function() {
-					alert(this.a1);
-				},
-				f2: function() {
-					alert(this.a2);
-				}
-			}
-			function Type2(a1, a2, a3, a4) {
-				var args = Array.prototype.slice(arguments)
-				Type1.call(this,a1,a2);
-				this.a3=a3;
-				this.a4=a4;
-			}
-			Type2.prototype=$.extend({},Object.create(Type1.prototype), {
-				f3:function(){
-					alert(this.a3);
-				},
-				f4:function(){
-					alert(this.a4);
-				}
-			});
+		<script>function Type1(a1, a2) {
+	this.a1 = a1;
+	this.a2 = a2;
+};
+Type1.prototype = {
+	constructor: Type1,
+	f1: function() {
+		alert(this.a1);
+	},
+	f2: function() {
+		alert(this.a2);
+	}
+}
+
+function Type2(a1, a2, a3, a4) {
+	Type1.call(this, a1, a2);
+	this.a3 = a3;
+	this.a4 = a4;
+}
+Type2.prototype = $.extend(Object.create(Type1.prototype), {
+	constructor: Type2,
+	f3: function() {
+		alert(this.a3);
+	},
+	f4: function() {
+		alert(this.a4);
+	}
+});//			Type2.prototype=new Type1();
+//			Type2.prototype.constructor=Type2;
 			var t=new Type2(1,2,3,4);
-			t.f1();
+			alert(t instanceof Type1)
+			alert(t instanceof Type2)
+
 			
 			
 		</script>

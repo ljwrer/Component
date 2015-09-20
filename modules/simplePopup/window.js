@@ -17,106 +17,72 @@ define(['jquery', 'jqueryUI', 'Widget', 'util'], function($, $UI, widget, util) 
 			dragHandle: null
 		};
 	}
-	util.inheritPrototype(Window, widget.Widget);
-	Window.prototype.rendUI = function() {
-		var that = this;
-		var CFG = $.extend(this.cfg, cfg);
-		this.$boundingBox = $('<div class="m-window-bounding-box">' +
-			'<div class="header">' + CFG.title + '</div>' +
-			'<div class="content">' + CFG.content + '</div>' +
-			'<div class="footer">' +
-			'<button class="close">' + CFG.text4AlertBtn + '</button>' +
-			'</div>' +
-			'</div>');
-
-	}
-	Window.prototype.bindUI = function() {
-		var that = this;
-		var CFG = $.extend(this.cfg, cfg);
-		$confirmButton = $boundingBox.find(".footer button");
-		$confirmButton.click(function() {
-			$boundingBox.remove();
-			$mask && $mask.remove();
-			that.fire("alert");
-		});
-
-	}
-	Window.prototype.syncUI = function() {
-
-	}
-	Window.prototype.destructor = function() {
-
-	}
-	Window.prototype.alert = function() {
-
-	}
-
-
-
-	Window.prototype = {
-
-		alert: function(cfg) {
+	Window.prototype = $.extend(util.create(widget.Widget.prototype), {
+		constructor: Window,
+		renderUI: function() {
+			this.$boundingBox = $('<div class="m-window-bounding-box">' +
+				'<div class="header">' + this.cfg.title + '</div>' +
+				'<div class="content">' + this.cfg.content + '</div>' +
+				'<div class="footer">' +
+				'<button class="close">' + this.cfg.text4AlertBtn + '</button>' +
+				'</div>' +
+				'</div>');
+			if (this.cfg.hasMask) {
+				$('<div class="m-window-mask"></div>').appendTo("body");
+			}
+			if (this.cfg.hasCloseBtn) {
+				$('<span class="close-btn"></span>').appendTo(this.$boundingBox);
+			}
+		},
+		bindUI: function() {
 			var that = this;
-			//			var CFG = $.extend(this.cfg, cfg);
-			//			var $boundingBox = $('<div class="m-window-bounding-box">' +
-			//				'<div class="header">' + CFG.title + '</div>' +
-			//				'<div class="content">' + CFG.content + '</div>' +
-			//				'<div class="footer">' +
-			//				'<button class="close">' + CFG.text4AlertBtn + '</button>' +
-			//				'</div>' +
-			//				'</div>');
-			//			$boundingBox.appendTo("body");
-//			$confirmButton = $boundingBox.find(".footer button");
-//			$confirmButton.click(function() {
-//				$boundingBox.remove();
-//				$mask && $mask.remove();
-//				that.fire("alert");
-//			});
-			$boundingBox.css({
-				width: CFG.width,
-				height: CFG.height,
-				left: CFG.left || (window.innerWidth - CFG.width) / 2,
-				top: CFG.top || (window.innerHeight - CFG.height) / 2
+			this.$boundingBox.delegate(".footer button", "click", function() {
+				that.fire("alert");
+				that.destroy();
+			}).delegate(".close-btn", "click", function() {
+				that.fire("close");
+				that.destroy();
+			})
+			if (this.cfg.handle4AlertBtn) {
+				that.on("alert", this.cfg.handle4AlertBtn);
+			}
+			if (this.cfg.handle4CloseBtn) {
+				that.on("close", this.cfg.handle4CloseBtn);
+			}
+		},
+		syncUI: function() {
+			this.$boundingBox.css({
+				width: this.cfg.width,
+				height: this.cfg.height,
+				left: this.cfg.left || (window.innerWidth - this.cfg.width) / 2,
+				top: this.cfg.top || (window.innerHeight - this.cfg.height) / 2
 			});
-			var $mask = null;
-			if (CFG.hasMask) {
-				$mask = $('<div class="m-window-mask"></div>');
-				$mask.appendTo("body");
+			if (this.cfg.skinClassName) {
+				this.$boundingBox.removeClass("m-window-bounding-box")
+				this.$boundingBox.addClass(this.cfg.skinClassName);
 			}
-			if (CFG.hasCloseBtn) {
-				var $closeBtn = $('<span class="close-btn"></span>');
-				$closeBtn.appendTo($boundingBox);
-				$closeBtn.click(function() {
-					$boundingBox.remove();
-					$mask && $mask.remove();
-					that.fire("close")
-				})
-			}
-			if (CFG.handle4AlertBtn) {
-				that.on("alert", CFG.handle4AlertBtn);
-			}
-			if (CFG.handle4CloseBtn) {
-				that.on("close", CFG.handle4CloseBtn);
-			}
-			if (CFG.skinClassName) {
-				$boundingBox.removeClass("m-window-bounding-box")
-				$boundingBox.addClass(CFG.skinClassName);
-			}
-			if (CFG.isDragable) {
-				if (CFG.dragHandle) {
-					var dragHandle = $boundingBox.find(CFG.dragHandle)
-					$boundingBox.draggable({
+			if (this.cfg.isDragable) {
+				if (this.cfg.dragHandle) {
+					var dragHandle = this.$boundingBox.find(this.cfg.dragHandle)
+					this.$boundingBox.draggable({
 						handle: dragHandle
 					});
 				} else {
-					$boundingBox.draggable();
+					this.$boundingBox.draggable();
 				}
 			}
+		},
+		destructor: function() {
+			$(".m-window-mask").remove();
+		},
+		alert: function(cfg) {
+			$.extend(this.cfg, cfg);
+			this.render();
 			return this;
 		},
 		confirm: function() {},
 		prompt: function() {}
-	}
+	});
 	return {
 		Window: Window
 	}

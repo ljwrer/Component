@@ -8,8 +8,8 @@ require.config({
 	}
 });
 require(['jquery', 'Window'], function(jquery, w) {
+	var win = new w.Window();
 	$("#a").click(function() {
-		var win = new w.Window();
 		win.alert({
 			width: 500,
 			height: 500,
@@ -31,5 +31,8 @@ require(['jquery', 'Window'], function(jquery, w) {
 		}).on("close",function(){
 			alert("click 2nd close button");
 		});
+	});
+	$("#b").click(function(){
+		new w.Window().alert({content:"haha"})
 	})
 })
