@@ -33,6 +33,10 @@ require(['jquery', 'Window'], function(jquery, w) {
 		});
 	});
 	$("#b").click(function(){
-		new w.Window().alert({content:"haha"})
+		new w.Window().confirm({content:"haha?",text4ConfirmBtn: "Yes",text4CancelBtn: "No"}).on("confirm",function(){
+			alert(true);
+		}).on("cancel",function(){
+			alert(false);
+		})
 	})
 })

@@ -5,14 +5,28 @@
 	border: 1px solid #000;
 	box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
-.m-window-bounding-box .close {
+/*.m-window-bounding-box .close {
 	position: absolute;
 	left: 50%;
 	bottom: 50px;
 	height: 30px;
 	width: 100px;
 	margin-left: -50px;
+}*/
+.m-window-bounding-box .footer{
+	position: absolute;
+	bottom: 50px;
+	width: 100%;
+	text-align: center;
 }
+
+.m-window-bounding-box .footer>button{
+	margin-left: 20px;
+	height: 30px;
+	width: 100px;
+}
+
+
 .m-window-bounding-box .header {
 	padding: 5px;
 	background: #333;
@@ -75,10 +89,14 @@
 	border: 1px solid #000;
 	box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
-.m-window-bounding-box-skina .close {
+.m-window-bounding-box-skina .footer{
 	position: absolute;
-	right: 20px;
 	bottom: 50px;
+	width: 100%;
+	text-align: center;
+}
+.m-window-bounding-box-skina .footer>button{
+	margin-left: 20px;
 	height: 30px;
 	width: 100px;
 }
