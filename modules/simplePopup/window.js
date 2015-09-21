@@ -12,10 +12,16 @@ define(['jquery', 'jqueryUI', 'Widget', 'util'], function($, $UI, widget, util) 
 			handle4AlertBtn: null,
 			handle4ConfirmBtn: null,
 			handle4CancelBtn: null,
+			handle4PromptBtn: null,
 			skinClassName: null,
 			text4AlertBtn: "确定",
 			text4ConfirmBtn: "确定",
 			text4CancelBtn: "取消",
+			text4PromptBtn: "提交",
+			placeholder4PromptInput: "请输入内容",
+			defaultText4PromptInput: "",
+			maxLength4PromptInput: 10,
+			isPromptInputPassword: false,
 			hasMask: true,
 			isDragable: true,
 			dragHandle: null
@@ -24,23 +30,30 @@ define(['jquery', 'jqueryUI', 'Widget', 'util'], function($, $UI, widget, util) 
 	Window.prototype = $.extend(util.create(widget.Widget.prototype), {
 		constructor: Window,
 		renderUI: function() {
-			var _footContent;
+			var footContent = "";
 			switch (this.cfg.windowType) {
 				case "alert":
-					_footContent = '<button class="close">' + this.cfg.text4AlertBtn + '</button>';
+					footContent = '<button class="close">' + this.cfg.text4AlertBtn + '</button>';
 					break;
 				case "confirm":
-					_footContent = '<button class="confirm">' + this.cfg.text4ConfirmBtn + '</button>' +
+					footContent = '<button class="confirm">' + this.cfg.text4ConfirmBtn + '</button>' +
 						'<button class="cancel">' + this.cfg.text4CancelBtn + '</button>'
 					break;
+				case "prompt":
+					this.cfg.content += '<p class="prompt-input-warpper"><input class="prompt-input" type="' + (this.cfg.isPromptInputPassword ? "password" : "text") + '" value="' + this.cfg.defaultText4PromptInput + '" placeholder="' + this.cfg.placeholder4PromptInput + '" maxlength="' + this.cfg.maxLength4PromptInput + '"/>' + '</p>';
+					footContent = '<button class="prompt">' + this.cfg.text4PromptBtn + '</button>' +
+						'<button class="cancel">' + this.cfg.text4CancelBtn + '</button>';
+					this._$promptInput = $(".pronpt-input input");
 				default:
 					break;
 			}
 			this.$boundingBox = $('<div class="m-window-bounding-box">' +
-				'<div class="header">' + this.cfg.title + '</div>' +
 				'<div class="content">' + this.cfg.content + '</div>' +
-				'<div class="footer">' + _footContent + '</div>' +
 				'</div>');
+			if(this.cfg.windowType!="common"){
+				this.$boundingBox.prepend('<div class="header">' + this.cfg.title + '</div>');
+				this.$boundingBox.append('<div class="footer">' + footContent + '</div>')
+			}
 			if (this.cfg.hasMask) {
 				this._mask = $('<div class="m-window-mask"></div>');
 				this._mask.appendTo("body")
@@ -48,6 +61,7 @@ define(['jquery', 'jqueryUI', 'Widget', 'util'], function($, $UI, widget, util) 
 			if (this.cfg.hasCloseBtn) {
 				$('<span class="close-btn"></span>').appendTo(this.$boundingBox);
 			}
+			this._$promptInput=this.$boundingBox.find(".prompt-input")
 		},
 		bindUI: function() {
 			var that = this;
@@ -63,7 +77,11 @@ define(['jquery', 'jqueryUI', 'Widget', 'util'], function($, $UI, widget, util) 
 			}).on("click", ".cancel", function() {
 				that.fire("cancel");
 				that.destroy();
+			}).on("click", ".prompt", function() {
+				that.fire("prompt",that._$promptInput.val());
+				that.destroy();
 			})
+
 			if (this.cfg.handle4AlertBtn) {
 				this.on("alert", this.cfg.handle4AlertBtn);
 			}
@@ -75,6 +93,9 @@ define(['jquery', 'jqueryUI', 'Widget', 'util'], function($, $UI, widget, util) 
 			}
 			if (this.cfg.handle4CancelBtn) {
 				this.on("cancel", this.cfg.handle4CancelBtn);
+			}
+			if (this.cfg.handle4PromptBtn) {
+				this.on("prompt", this.cfg.handle4PromptBtn);
 			}
 		},
 		syncUI: function() {
@@ -116,7 +137,21 @@ define(['jquery', 'jqueryUI', 'Widget', 'util'], function($, $UI, widget, util) 
 			this.render();
 			return this;
 		},
-		prompt: function() {}
+		prompt: function(cfg) {
+			$.extend(this.cfg, cfg, {
+				windowType: "prompt"
+			});
+			this.render();
+			this._$promptInput.focus();
+			return this;
+		},
+		common:function(cfg){
+			$.extend(this.cfg,cfg,{
+				windowType:"common"
+			})
+			this.render();
+			return this;
+		}
 	});
 	return {
 		Window: Window

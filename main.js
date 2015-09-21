@@ -38,5 +38,18 @@ require(['jquery', 'Window'], function(jquery, w) {
 		}).on("cancel",function(){
 			alert(false);
 		})
+	});
+	$("#c").click(function(){
+		new w.Window().prompt({
+			handle4PromptBtn:function(data){
+				alert("你输入了"+data);
+			}
+		});
+	});
+	$("#d").click(function(){
+		new w.Window().common({
+			content:"common window",
+			hasCloseBtn:true
+		})
 	})
 })

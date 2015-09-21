@@ -5,14 +5,12 @@
 	border: 1px solid #000;
 	box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
-/*.m-window-bounding-box .close {
-	position: absolute;
-	left: 50%;
-	bottom: 50px;
-	height: 30px;
-	width: 100px;
-	margin-left: -50px;
-}*/
+.m-window-bounding-box .prompt-input-warpper {
+	text-align: center;
+}
+.m-window-bounding-box .content{
+	margin: 50px;
+}
 .m-window-bounding-box .footer{
 	position: absolute;
 	bottom: 50px;
@@ -52,7 +50,7 @@
 	top: 0;
 	width: 28px;
 	height: 1px;
-	background: #fff;
+	background: #f0f;
 	font-size: 0;
 	line-height: 0;
 	vertical-align: middle;
@@ -70,7 +68,7 @@
 	top: 18px;
 	width: 28px;
 	height: 1px;
-	background: #fff;
+	background: #f0f;
 	font-size: 0;
 	line-height: 0;
 	vertical-align: middle;
@@ -110,6 +108,9 @@
 .m-window-bounding-box-skina .content {
 	padding: 10px;
 	color: #000;
+	text-align: center;
+}
+.m-window-bounding-box-skina .prompt-input-warpper {
 	text-align: center;
 }
 .m-window-bounding-box-skina .close-btn{
